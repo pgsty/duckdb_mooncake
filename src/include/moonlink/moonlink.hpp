@@ -1,6 +1,5 @@
 #pragma once
 
-#include "duckdb/common/mutex.hpp"
 #include "moonlink/moonlink_ffi.hpp"
 
 namespace duckdb {
@@ -11,14 +10,12 @@ public:
 
 	DataPtr GetTableSchema(const string &schema, const string &table);
 
-	DataPtr ScanTableBegin(const string &schema, const string &table, uint64_t lsn);
-
-	void ScanTableEnd(const string &schema, const string &table);
+	StreamPtr Connect() const;
+	DataPtr ScanTableBegin(Stream &stream, const string &schema, const string &table, uint64_t lsn);
 
 private:
+	string uri;
 	string database;
-	mutex lock;
-	StreamPtr stream;
 };
 
 } // namespace duckdb

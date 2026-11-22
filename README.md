@@ -2,7 +2,7 @@
 
 [![Website: mooncake.pgsty.com](https://img.shields.io/badge/Website-mooncake.pgsty.com-slategray?style=flat&logo=cilium&logoColor=white)](https://mooncake.pgsty.com/)
 [![Docs: duckdb_mooncake](https://img.shields.io/badge/Docs-duckdb__mooncake-slategray?style=flat)](https://mooncake.pgsty.com/docs/intro/duckdb-mooncake/)
-[![Version: v0.0.3](https://img.shields.io/badge/Version-v0.0.3-slategray?style=flat)](https://github.com/pgsty/duckdb_mooncake/releases)
+[![Version: v0.0.4](https://img.shields.io/badge/Version-v0.0.4-slategray?style=flat)](https://github.com/pgsty/duckdb_mooncake/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-slategray?style=flat&logo=opensourceinitiative&logoColor=green)](https://github.com/pgsty/duckdb_mooncake/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/pgsty/duckdb_mooncake?style=flat&logo=github&logoColor=black&color=slategray)](https://star-history.com/#pgsty/duckdb_mooncake&Date)
 [![DuckDB: v2.0.1](https://img.shields.io/badge/DuckDB-v2.0.1-%23FFF000?style=flat&logo=duckdb&logoColor=black&labelColor=FFF000)](https://duckdb.org/)
@@ -17,11 +17,16 @@
 
 `duckdb_mooncake` is the DuckDB storage and scan engine of the **Mooncake** family maintained by [PGSTY](https://pgsty.com):
 
-- **[`pg_mooncake`](https://github.com/pgsty/pg_mooncake)** ([Docs](https://mooncake.pgsty.com/docs/intro/) / [Meta](https://pgext.cloud/ext/pg_mooncake)): PostgreSQL 15–19 extension (`v0.3.1`, MIT) providing `mooncake.create_table()`, logical replication workers, and transparent query routing via `pg_duckdb` `1.2.1`.
-- **[`moonlink`][moonlink-link]** ([Docs](https://mooncake.pgsty.com/docs/intro/moonlink/)): Rust real-time Iceberg v3 ingestion engine (`v0.3.0`, BSL-1.1 with `pg_mooncake` Linking & Distribution Exception; client crates MIT).
-- **[`duckdb_mooncake`](https://github.com/pgsty/duckdb_mooncake)** ([Docs](https://mooncake.pgsty.com/docs/intro/duckdb-mooncake/)): DuckDB `v2.0.1` storage & catalog scanner extension (`v0.0.3`, MIT) merging in-memory Arrow IPC buffers, Roaring deletion vectors, and flushed Parquet files with LSN snapshot consistency.
+- **[`pg_mooncake`](https://github.com/pgsty/pg_mooncake)** provides the PostgreSQL 15–19 integration through `pg_duckdb 1.2.1`.
+- **[`moonlink`][moonlink-link]** maintains Iceberg mirrors from the PostgreSQL replication stream.
+- **[`duckdb_mooncake`](https://github.com/pgsty/duckdb_mooncake)** reads those mirrors in DuckDB `v2.0.1`.
 
 ---
+
+## Version v0.0.4
+
+Each scan owns its Moonlink connection and releases its read state when the connection closes.
+The version change lets pg_mooncake detect an older binary in DuckDB's v2.0.1 extension cache.
 
 ## Version v0.0.3
 
@@ -40,11 +45,11 @@ See [Adapting pg_mooncake to DuckDB 2.0 & PostgreSQL 18](https://mooncake.pgsty.
 
 ## Installation
 
-When used with [`pg_mooncake v0.3.1`](https://github.com/pgsty/pg_mooncake), `mooncake.duckdb_extension` (`v0.0.3`, compiled for DuckDB `v2.0.1`) is staged into the local extension repository (`$(pg_config --sharedir)/extension/pg_mooncake`) and loaded automatically when `mooncake.extension_repository` is configured.
+With `pg_mooncake v0.3.2`, the build stages scanner `v0.0.4` for DuckDB `v2.0.1` into `$(pg_config --sharedir)/extension/pg_mooncake`. Set `mooncake.extension_repository` to this directory.
 
-In standalone DuckDB, `duckdb_mooncake` can also be installed using the `INSTALL` command (note: the upstream DuckDB community repository currently hosts legacy `v0.0.1` for DuckDB `1.4.x`; for DuckDB `2.0.1`, load the locally built `mooncake.duckdb_extension`):
+In a standalone DuckDB `v2.0.1` session configured for unsigned local extensions, load the matching build:
 ```sql
-INSTALL duckdb_mooncake FROM community;
+LOAD '/absolute/path/to/mooncake.duckdb_extension';
 ```
 
 ## Usage
@@ -83,7 +88,7 @@ To run, run the bundled `duckdb` shell:
 
 Full documentation is available at **[mooncake.pgsty.com/docs/intro/duckdb-mooncake](https://mooncake.pgsty.com/docs/intro/duckdb-mooncake/)**:
 
-- [duckdb_mooncake Scanner Architecture (`v0.0.3`)](https://mooncake.pgsty.com/docs/intro/duckdb-mooncake/)
+- [duckdb_mooncake Scanner Architecture](https://mooncake.pgsty.com/docs/intro/duckdb-mooncake/)
 - [Mooncake End-to-End Architecture](https://mooncake.pgsty.com/docs/intro/architecture/)
 - [Adapting pg_mooncake to DuckDB 2.0 & PostgreSQL 18](https://mooncake.pgsty.com/blog/post/duckdb-2-adaptation/)
 - [Unlocking DuckDB's Parallel Parquet Reader for Custom Table Functions](https://mooncake.pgsty.com/blog/post/duckdb-parquet/)

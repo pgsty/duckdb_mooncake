@@ -10,8 +10,7 @@ namespace duckdb {
 
 MooncakeTableMetadata::MooncakeTableMetadata(Moonlink &moonlink, const string &schema, const string &table,
                                              uint64_t lsn)
-    : moonlink(moonlink), schema(schema), table(table) {
-	data = moonlink.ScanTableBegin(schema, table, lsn);
+    : stream(moonlink.Connect()), data(moonlink.ScanTableBegin(*stream, schema, table, lsn)) {
 	uint32_t *ptr = reinterpret_cast<uint32_t *>(data->ptr);
 
 	data_files_len = *ptr++;
@@ -36,10 +35,6 @@ MooncakeTableMetadata::MooncakeTableMetadata(Moonlink &moonlink, const string &s
 	puffin_files_data = char_ptr;
 	char_ptr += puffin_files_offsets[puffin_files_len];
 	D_ASSERT(char_ptr == reinterpret_cast<char *>(data->ptr + data->len));
-}
-
-MooncakeTableMetadata::~MooncakeTableMetadata() {
-	moonlink.ScanTableEnd(schema, table);
 }
 
 class MooncakeDeleteFilter : public DeleteFilter {

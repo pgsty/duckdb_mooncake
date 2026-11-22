@@ -1,6 +1,7 @@
 #pragma once
 
 #include "duckdb/common/unique_ptr.hpp"
+#include <type_traits>
 
 struct Data {
 	uint8_t *ptr;
@@ -10,7 +11,7 @@ struct Data {
 
 template <typename T>
 struct Result {
-	T Unwrap(bool throw_err = true);
+	T Unwrap();
 
 	enum class Tag {
 		Ok,
@@ -37,6 +38,9 @@ struct Stream;
 struct Void {
 	uint8_t _void;
 };
+
+static_assert(std::is_trivially_copyable_v<Result<Stream *>> && std::is_trivially_copyable_v<Result<Data *>> &&
+              std::is_trivially_copyable_v<Result<Void>>);
 
 extern "C" [[nodiscard]] Result<Stream *> moonlink_connect(const char *uri);
 
@@ -68,13 +72,11 @@ using DataPtr = duckdb::unique_ptr<Data, Deleter<moonlink_drop_data>>;
 using StreamPtr = duckdb::unique_ptr<Stream, Deleter<moonlink_drop_stream>>;
 
 template <typename T>
-T Result<T>::Unwrap(bool throw_err) {
+T Result<T>::Unwrap() {
 	if (tag == Tag::Err) {
 		duckdb::string msg = err.msg;
 		moonlink_drop_cstring(err.msg);
-		if (throw_err) {
-			throw duckdb::Exception(duckdb::ExceptionType::UNKNOWN_TYPE, msg);
-		}
+		throw duckdb::Exception(duckdb::ExceptionType::UNKNOWN_TYPE, msg);
 	}
 	return ok.t;
 }

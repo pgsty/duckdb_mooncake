@@ -10,8 +10,6 @@ class MooncakeTableMetadata {
 public:
 	MooncakeTableMetadata(Moonlink &moonlink, const string &schema, const string &table, uint64_t lsn);
 
-	~MooncakeTableMetadata();
-
 	uint32_t GetNumDataFiles() {
 		return data_files_len;
 	}
@@ -29,9 +27,7 @@ private:
 	// [data_file_number, data_file_row_number]
 	using PositionDelete = uint32_t[2];
 
-	Moonlink &moonlink;
-	const string &schema;
-	const string &table;
+	StreamPtr stream;
 	DataPtr data;
 
 	uint32_t data_files_len;

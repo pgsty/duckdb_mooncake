@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.15...3.29)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -14,7 +14,7 @@ include(FetchContent)
 FetchContent_Declare(
     Corrosion
     GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
-    GIT_TAG v0.5
+    GIT_TAG a1a1aaa057a5da656c06c3d8505b767a4e941709
 )
 FetchContent_MakeAvailable(Corrosion)
 
@@ -24,7 +24,6 @@ FetchContent_Declare(
     nanoarrow
     URL "https://github.com/apache/arrow-nanoarrow/archive/refs/tags/apache-arrow-nanoarrow-0.7.0.zip"
     URL_HASH SHA256=bd40a2ee849c650b243818b12e925cac17f8fc300acacd141177345fd6b2e9f4
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(nanoarrow)
 
@@ -39,7 +38,6 @@ if(NOT roaring_FOUND)
         roaring
         URL "https://github.com/RoaringBitmap/CRoaring/archive/refs/tags/v5.5.4.tar.gz"
         URL_HASH SHA256=b415800c3d59a3f56b52bc424e81a26383905d5d0e98186c62cfad32f9dc3bd6
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
     FetchContent_MakeAvailable(roaring)
 endif()
