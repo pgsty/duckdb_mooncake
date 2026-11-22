@@ -3,7 +3,7 @@
 # Extension from this repo
 duckdb_extension_load(mooncake
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}
-    EXTENSION_VERSION v0.0.2
+    EXTENSION_VERSION v0.0.3
     LOAD_TESTS
 )
 
