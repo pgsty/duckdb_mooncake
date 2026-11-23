@@ -1,4 +1,21 @@
 # name: test/sql/mooncake.test
-# description: test mooncake extension
+# description: load the Mooncake scanner and validate its storage registration
 # group: [sql]
 
+statement ok
+LOAD mooncake
+
+query I
+SELECT count(*) FROM duckdb_extensions() WHERE extension_name = 'mooncake' AND loaded
+----
+1
+
+statement error
+ATTACH ':memory:' AS mirror (TYPE mooncake)
+----
+Missing required option URI
+
+statement error
+ATTACH ':memory:' AS mirror (TYPE mooncake, URI 'unused')
+----
+Missing required option DATABASE
