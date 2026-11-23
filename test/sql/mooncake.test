@@ -3,7 +3,7 @@
 # group: [sql]
 
 statement ok
-LOAD mooncake
+LOAD '{BUILD_DIRECTORY}/extension/mooncake/mooncake.duckdb_extension'
 
 query I
 SELECT count(*) FROM duckdb_extensions() WHERE extension_name = 'mooncake' AND loaded
