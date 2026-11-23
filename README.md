@@ -2,7 +2,7 @@
 
 [![Website: mooncake.pgsty.com](https://img.shields.io/badge/Website-mooncake.pgsty.com-slategray?style=flat&logo=cilium&logoColor=white)](https://mooncake.pgsty.com/)
 [![Docs: duckdb_mooncake](https://img.shields.io/badge/Docs-duckdb__mooncake-slategray?style=flat)](https://mooncake.pgsty.com/docs/intro/duckdb-mooncake/)
-[![Version: v0.0.4](https://img.shields.io/badge/Version-v0.0.4-slategray?style=flat)](https://github.com/pgsty/duckdb_mooncake/releases)
+[![Version: v0.0.5](https://img.shields.io/badge/Version-v0.0.5-slategray?style=flat)](https://github.com/pgsty/duckdb_mooncake/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-slategray?style=flat&logo=opensourceinitiative&logoColor=green)](https://github.com/pgsty/duckdb_mooncake/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/pgsty/duckdb_mooncake?style=flat&logo=github&logoColor=black&color=slategray)](https://star-history.com/#pgsty/duckdb_mooncake&Date)
 [![DuckDB: v2.0.1](https://img.shields.io/badge/DuckDB-v2.0.1-%23FFF000?style=flat&logo=duckdb&logoColor=black&labelColor=FFF000)](https://duckdb.org/)
@@ -22,6 +22,11 @@
 - **[`duckdb_mooncake`](https://github.com/pgsty/duckdb_mooncake)** reads those mirrors in DuckDB `v2.0.1`.
 
 ---
+
+## Version v0.0.5
+
+The RPC client uses the same Moonlink revision as `pg_mooncake v0.3.3`, `v0.3.0-pgsty.2`.
+The snapshot durability fix runs in the Moonlink worker.
 
 ## Version v0.0.4
 
@@ -45,7 +50,7 @@ See [Adapting pg_mooncake to DuckDB 2.0 & PostgreSQL 18](https://mooncake.pgsty.
 
 ## Installation
 
-With `pg_mooncake v0.3.2`, the build stages scanner `v0.0.4` for DuckDB `v2.0.1` into `$(pg_config --sharedir)/extension/pg_mooncake`. Set `mooncake.extension_repository` to this directory.
+With `pg_mooncake v0.3.3`, the build stages scanner `v0.0.5` for DuckDB `v2.0.1` into `$(pg_config --sharedir)/extension/pg_mooncake`. Set `mooncake.extension_repository` to this directory.
 
 In a standalone DuckDB `v2.0.1` session configured for unsigned local extensions, load the matching build:
 ```sql
