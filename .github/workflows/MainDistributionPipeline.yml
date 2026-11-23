@@ -9,32 +9,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  duckdb-next-build:
-    name: Build extension binaries
-    uses: duckdb/extension-ci-tools/.github/workflows/_extension_distribution.yml@main
-    if: false
-    with:
-      duckdb_version: main
-      ci_tools_version: main
-      enable_rust: true
-      exclude_archs: windows_amd64;windows_amd64_mingw;wasm_mvp;wasm_eh;wasm_threads
-      extension_name: mooncake
-
   duckdb-stable-build:
     name: Build extension binaries
-    uses: duckdb/extension-ci-tools/.github/workflows/_extension_distribution.yml@c098325d7e622b52747a0df810a8146ab10a9ab5
+    uses: duckdb/extension-ci-tools/.github/workflows/_extension_distribution.yml@43dae9ec2b843bf9c6200ea4bbe5ad703cd01f77
     with:
       duckdb_version: v2.0.1
-      ci_tools_version: c098325d7e622b52747a0df810a8146ab10a9ab5
-      enable_rust: true
+      ci_tools_version: 43dae9ec2b843bf9c6200ea4bbe5ad703cd01f77
+      extra_toolchains: rust
+      opt_in_archs: linux_amd64_musl
       exclude_archs: windows_amd64;windows_amd64_mingw;wasm_mvp;wasm_eh;wasm_threads
       extension_name: mooncake
 
   code-quality-check:
     name: Code Quality Check
-    uses: duckdb/extension-ci-tools/.github/workflows/_extension_code_quality.yml@main
+    uses: duckdb/extension-ci-tools/.github/workflows/_extension_code_quality.yml@43dae9ec2b843bf9c6200ea4bbe5ad703cd01f77
     with:
-      duckdb_version: main
-      ci_tools_version: main
+      ci_tools_version: 43dae9ec2b843bf9c6200ea4bbe5ad703cd01f77
       extension_name: mooncake
       format_checks: format

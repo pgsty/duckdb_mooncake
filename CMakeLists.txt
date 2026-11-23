@@ -12,40 +12,44 @@ project(${TARGET_NAME})
 include(FetchContent)
 
 FetchContent_Declare(
-    Corrosion
-    GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
-    GIT_TAG a1a1aaa057a5da656c06c3d8505b767a4e941709
-)
+  Corrosion
+  GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
+  GIT_TAG a1a1aaa057a5da656c06c3d8505b767a4e941709)
 FetchContent_MakeAvailable(Corrosion)
 
 set(NANOARROW_NAMESPACE ${TARGET_NAME})
 set(NANOARROW_IPC ON)
 FetchContent_Declare(
-    nanoarrow
-    URL "https://github.com/apache/arrow-nanoarrow/archive/refs/tags/apache-arrow-nanoarrow-0.7.0.zip"
-    URL_HASH SHA256=bd40a2ee849c650b243818b12e925cac17f8fc300acacd141177345fd6b2e9f4
-)
+  nanoarrow
+  URL "https://github.com/apache/arrow-nanoarrow/archive/refs/tags/apache-arrow-nanoarrow-0.7.0.zip"
+  URL_HASH
+    SHA256=bd40a2ee849c650b243818b12e925cac17f8fc300acacd141177345fd6b2e9f4)
 FetchContent_MakeAvailable(nanoarrow)
 
 find_package(roaring 4 CONFIG QUIET)
 if(NOT roaring_FOUND)
-    # Ubuntu 24.04 ships CRoaring 0.2, which lacks the bulk bitmap API.
-    set(ENABLE_ROARING_TESTS OFF CACHE BOOL "" FORCE)
-    set(ROARING_USE_CPM OFF CACHE BOOL "" FORCE)
-    set(ROARING_BUILD_STATIC ON CACHE BOOL "" FORCE)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    FetchContent_Declare(
-        roaring
-        URL "https://github.com/RoaringBitmap/CRoaring/archive/refs/tags/v5.5.4.tar.gz"
-        URL_HASH SHA256=b415800c3d59a3f56b52bc424e81a26383905d5d0e98186c62cfad32f9dc3bd6
-    )
-    FetchContent_MakeAvailable(roaring)
+  # Ubuntu 24.04 ships CRoaring 0.2, which lacks the bulk bitmap API.
+  set(ENABLE_ROARING_TESTS
+      OFF
+      CACHE BOOL "" FORCE)
+  set(ROARING_USE_CPM
+      OFF
+      CACHE BOOL "" FORCE)
+  set(ROARING_BUILD_STATIC
+      ON
+      CACHE BOOL "" FORCE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  FetchContent_Declare(
+    roaring
+    URL "https://github.com/RoaringBitmap/CRoaring/archive/refs/tags/v5.5.4.tar.gz"
+    URL_HASH
+      SHA256=b415800c3d59a3f56b52bc424e81a26383905d5d0e98186c62cfad32f9dc3bd6)
+  FetchContent_MakeAvailable(roaring)
 endif()
 
 corrosion_import_crate(MANIFEST_PATH moonlink_ffi/Cargo.toml LOCKED)
 
-include_directories(
-    src/include)
+include_directories(src/include)
 
 set(EXTENSION_SOURCES
     src/mooncake_extension.cpp
@@ -62,10 +66,8 @@ set(EXTENSION_SOURCES
 build_static_extension(${TARGET_NAME} ${EXTENSION_SOURCES})
 build_loadable_extension(${TARGET_NAME} " " ${EXTENSION_SOURCES})
 
-set(LINK_LIBRARIES
-    nanoarrow::nanoarrow
-    nanoarrow::nanoarrow_ipc
-    roaring::roaring)
+set(LINK_LIBRARIES nanoarrow::nanoarrow nanoarrow::nanoarrow_ipc
+                   roaring::roaring)
 
 target_link_libraries(${EXTENSION_NAME} moonlink_ffi-static ${LINK_LIBRARIES})
 target_link_libraries(${LOADABLE_EXTENSION_NAME} moonlink_ffi ${LINK_LIBRARIES})
